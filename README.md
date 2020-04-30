@@ -20,16 +20,7 @@ I mainly will configure an entry point capable of generate random data with a di
 
 ### Configuration pipeline 
 
-Quick index for references:
-
-1. [KDG configuration](kinesis-data-generator)
-2. [Kinesis Data streaiming](kinesis-data-stream-listener)
-3. Lambda functions
-4. S3 raw zone
-5. Snowflake staging zone
-
-
-#### [Kinesis Data Generator](https://awslabs.github.io/amazon-kinesis-data-generator/web/help.html) is deployed within the AWS region where I'm going to set the full environment. As part of the produced ata I will implement a very basic data schema as expose below:
+1. [Kinesis Data Generator](https://awslabs.github.io/amazon-kinesis-data-generator/web/help.html) is deployed within the AWS region where I'm going to set the full environment. As part of the produced ata I will implement a very basic data schema as expose below:
 
 ```
 {
@@ -47,9 +38,12 @@ Quick index for references:
 ```
 Which give us the sample data input in this format: `{"sensorId": 6,"currentTemperature": 64,"status": "OK"}` One of the cool features around this AWS producer tool is the fact that we can scale on the flight the number of records we inster per second from 1 to 1k. This is wonderful to test how resiliant and scalable is our pipeline.
 
-#### Kinesis Data Stream Listener is the entry point into the AWS stack, initially I have configure this service with a very simple and basic operationality with a single shard. 1 shard will empower my entry listener point to process up to 1K records per second and read equialy a max of 2MB/sec and write 1MB/sec. If you on your escenario need to pilot a pipeline with greater than these features please increase the number of shards or read more about this [here](https://docs.aws.amazon.com/streams/latest/dev/key-concepts.html).
+2. Kinesis Data Stream Listener is the entry point into the AWS stack, initially I have configure this service with a very simple and basic operationality with a single shard. 1 shard will empower my entry listener point to process up to 1K records per second and read equialy a max of 2MB/sec and write 1MB/sec. If you on your escenario need to pilot a pipeline with greater than these features please increase the number of shards or read more about this [here](https://docs.aws.amazon.com/streams/latest/dev/key-concepts.html).
 
 3. Lambda functions
+
+* SnowflakeOrchestrator
+* SnowflakeUpsert
 
 4. S3 raw landing zone
 
