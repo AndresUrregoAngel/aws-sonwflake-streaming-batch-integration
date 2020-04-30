@@ -16,6 +16,7 @@ I mainly will configure an entry point capable of generate random data with a di
 * [VPC](https://aws.amazon.com/vpc/) configuration with an active [NAT Gateway](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html) to enable the lambda function that reach the Snowflake environemnt go throughout internet securely.
 * Configure the [Kinesis Data Generator](https://awslabs.github.io/amazon-kinesis-data-generator/web/help.html) as producer into your environment
 * Count with a valide Snowflake account and configure an external stage using the S3 bucket where the data is going to be store for the micro-batching approach.
+* Inlcude a [lambda layer](https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html) with [Pandas](https://pandas.pydata.org/docs/) python package 
 
 
 ### Configuration pipeline 
@@ -42,7 +43,11 @@ Which give us the sample data input in this format: `{"sensorId": 6,"currentTemp
 
 3. Lambda functions
 
-* SnowflakeOrchestrator
+* SnowflakeOrchestrator : This function will consum the content of the Kinesis data stream, afterwards will turn the content of the messages in a file compiling the number of records we configure on the reading settings into a single file into S3 `Raw Landing Zone`. Finally, will pass over a second lambda function the content of the pulled records from the entry Kinesis data streaming , to trigger the streaming ingestion service.
+    * To verify the code of this fucntion please go [here](https://github.com/AndresUrregoAngel/aws-sonwflake-streaming-batch-integration/tree/master/src/awslambdas/orchestrator)
+    * The configuration of the reading kinesis data streaming for this function is below: notice the continues reading in batches of 100 records.
+    ![kinesis-config](https://github.com/AndresUrregoAngel/cloud/blob/master/architectures/aws-connector-kinesis.png)
+
 * SnowflakeUpsert
 
 4. S3 raw landing zone
