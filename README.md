@@ -15,3 +15,9 @@ I mainly will configure an entry point capable of generate random data with a di
 * [IAM roles](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html) to enable the lambda functions reach the services along the AWS ecosystem.
 * [VPC](https://aws.amazon.com/vpc/) configuration with an active [NAT Gateway](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html) to enable the lambda function that reach the Snowflake environemnt go throughout internet securely.
 * Configure the [Kinesis Data Generator](https://awslabs.github.io/amazon-kinesis-data-generator/web/help.html) as producer into your environment
+* Count with a valide Snowflake account and configure an external stage using the S3 bucket where the data is going to be store for the micro-batching approach.
+
+
+### Configuration pipeline 
+
+
