@@ -4,7 +4,14 @@
 
 ### Solution architecture
 
-I mainly will configure an entry point capable of generate random data with a different number of batch in a time frame, the best quick and very easy to deploy producer for pilots in AWS is [KDG Kinesis Data Generator](https://aws.amazon.com/blogs/big-data/test-your-streaming-data-solution-with-the-new-amazon-kinesis-data-generator/). From this poinf the data will flow trhoughout a streaming services which collects the data in real-time and dispatch autimatically the functions that manipulate the data up to the two landing zones: [S3](https://aws.amazon.com/s3/) and [Snowflake](https://www.snowflake.com/)
+I mainly will configure an entry point capable of generate random data with a different number of batch in a time frame, the best quick and very easy to deploy producer for pilots in AWS is [KDG Kinesis Data Generator](https://aws.amazon.com/blogs/big-data/test-your-streaming-data-solution-with-the-new-amazon-kinesis-data-generator/). From this poinf the data will flow trhoughout a streaming services which collects the data in real-time and dispatch autimatically the functions that manipulate the data up to the two landing zones: [S3](https://aws.amazon.com/s3/) and [Snowflake](https://www.snowflake.com/). To have a closer look over the architeacture deploy in this process please see below:
 
 
 ![architecture](https://github.com/AndresUrregoAngel/cloud/blob/master/architectures/aws-connector-usecase.png)
+
+
+### Prior requirements within the AWS configuration:
+
+* [IAM roles](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html) to enable the lambda functions reach the services along the AWS ecosystem.
+* [VPC](https://aws.amazon.com/vpc/) configuration with an active [NAT Gateway](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html) to enable the lambda function that reach the Snowflake environemnt go throughout internet securely.
+* Configure the [Kinesis Data Generator](https://awslabs.github.io/amazon-kinesis-data-generator/web/help.html) as producer into your environment
