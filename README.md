@@ -18,6 +18,7 @@ I mainly will configure an entry point capable of generate random data with a di
 * Count with a valide Snowflake account and configure an external stage using the S3 bucket where the data is going to be store for the micro-batching approach.
 * Inlcude a [lambda layer](https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html) with [Pandas](https://pandas.pydata.org/docs/) python package 
 * Create the two staging tables for both ingestion process on snowflake, find these scripts [here]()
+* Configure the [SNOWPIPE](https://docs.snowflake.com/en/user-guide/data-load-snowpipe-intro.html) procedure that will carry out the movement from your [external staging](https://docs.snowflake.com/en/user-guide/data-load-s3-create-stage.html) `S3` into the micro-batch staging table
 
 
 ### Configuration pipeline 
@@ -53,7 +54,7 @@ Which give us the sample data input in this format: `{"sensorId": 6,"currentTemp
 
 4. S3 raw landing zone: This bucket will host the data insert as result of the step 3 `SnowflakeOrchestrator` execution. This step will create sequentially `csv` files in this bucket over the path `kinesiscsv/sensor-<sendorId>`. Each of these files content the number of records sets on the batch to read from the Kinesis Data Streaming configuration of the lambda fucntion `SnowflakeOrchestrator`. These files will feed the micro-batch process trigger by Snowflake [SNOWPIPE](https://docs.snowflake.com/en/user-guide/data-load-snowpipe-intro.html)
 
-5. Snowflake staging landing zone
+5. Snowflake staging landing zone : The pipeline will end up having an automare feed process to populate two tables into the snowflake staging zone `KINESIS_SENSORS_STREAMING` and `KINESIS_SENSORS_MICROBATCH`, the scripts for these tables are available [here](). Once the pipeline will be executed the data will flow all the architecture long until end up landing in each of these tables.
 
 
 
