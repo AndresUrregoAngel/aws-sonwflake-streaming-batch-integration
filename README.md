@@ -17,6 +17,7 @@ I mainly will configure an entry point capable of generate random data with a di
 * Configure the [Kinesis Data Generator](https://awslabs.github.io/amazon-kinesis-data-generator/web/help.html) as producer into your environment
 * Count with a valide Snowflake account and configure an external stage using the S3 bucket where the data is going to be store for the micro-batching approach.
 * Inlcude a [lambda layer](https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html) with [Pandas](https://pandas.pydata.org/docs/) python package 
+* Create the two staging tables for both ingestion process on snowflake, find these scripts [here]()
 
 
 ### Configuration pipeline 
@@ -43,14 +44,14 @@ Which give us the sample data input in this format: `{"sensorId": 6,"currentTemp
 
 3. Lambda functions
 
-* SnowflakeOrchestrator : This function will consum the content of the Kinesis data stream, afterwards will turn the content of the messages in a file compiling the number of records we configure on the reading settings into a single file into S3 `Raw Landing Zone`. Finally, will pass over a second lambda function the content of the pulled records from the entry Kinesis data streaming , to trigger the streaming ingestion service.
+* SnowflakeOrchestrator : `Python 3.6` This function will consum the content of the Kinesis data stream, afterwards will turn the content of the messages in a file compiling the number of records we configure on the reading settings into a single file into S3 `Raw Landing Zone`. Finally, will pass over a second lambda function the content of the pulled records from the entry Kinesis data streaming , to trigger the streaming ingestion service.
     * To verify the code of this fucntion please go [here](https://github.com/AndresUrregoAngel/aws-sonwflake-streaming-batch-integration/tree/master/src/awslambdas/orchestrator)
     * The configuration of the reading kinesis data streaming for this function is below: notice the continues reading in batches of 100 records.
     ![kinesis-config](https://github.com/AndresUrregoAngel/cloud/blob/master/architectures/aws-connector-kinesis.png)
 
-* SnowflakeUpsert
+* SnowflakeUpsert : `Java 8` Once the prio function execute the invoke over this pipeline, the records are processed and insert right stratight into the snowflake `Staging Zone`, find out the source code for this function [here](https://github.com/AndresUrregoAngel/aws-sonwflake-streaming-batch-integration/tree/master/src/main/java/lambdaroot)
 
-4. S3 raw landing zone
+4. S3 raw landing zone: This bucket will host the data insert as result of the step 3 `SnowflakeOrchestrator` execution. This step will create sequentially `csv` files in this bucket over the path `kinesiscsv/sensor-<sendorId>`. Each of these files content the number of records sets on the batch to read from the Kinesis Data Streaming configuration of the lambda fucntion `SnowflakeOrchestrator`. These files will feed the micro-batch process trigger by Snowflake [SNOWPIPE](https://docs.snowflake.com/en/user-guide/data-load-snowpipe-intro.html)
 
 5. Snowflake staging landing zone
 
