@@ -7,7 +7,7 @@
 I mainly will configure an entry point capable of generate random data with a different number of batch in a time frame, the best quick and very easy to deploy producer for pilots in AWS is [KDG Kinesis Data Generator](https://aws.amazon.com/blogs/big-data/test-your-streaming-data-solution-with-the-new-amazon-kinesis-data-generator/). From this poinf the data will flow trhoughout a streaming services which collects the data in real-time and dispatch autimatically the functions that manipulate the data up to the two landing zones: [S3](https://aws.amazon.com/s3/) and [Snowflake](https://www.snowflake.com/). To have a closer look over the architeacture deploy in this process please see below:
 
 
-![architecture](https://github.com/AndresUrregoAngel/cloud/blob/master/architectures/aws-connector-usecase.png)
+![architecture](https://github.com/AndresUrregoAngel/cloud/blob/master/architectures/aws-connector-uc.png)
 
 
 ### Prior requirements within the AWS configuration:
@@ -19,5 +19,27 @@ I mainly will configure an entry point capable of generate random data with a di
 
 
 ### Configuration pipeline 
+
+1. [Kinesis Data Generator](https://awslabs.github.io/amazon-kinesis-data-generator/web/help.html) is deployed within the AWS region where I'm going to set the full environment. As part of the produced ata I will implement a very basic data schema as expose below:
+
+```
+{
+    "sensorId": {{random.number(50)}},
+    "currentTemperature": {{random.number(
+        {
+            "min":10,
+            "max":150
+        }
+    )}},
+    "status": "{{random.arrayElement(
+        ["OK","FAIL","WARN"]
+    )}}"
+}
+```
+Which give us the sample data input in this format: `{"sensorId": 6,"currentTemperature": 64,"status": "OK"}` One of the cool features around this AWS producer tool is the fact that we can scale on the flight the number of records we inster per second from 1 to 1k. This is wonderful to test how resiliant and scalable is our pipeline.
+
+2. Kinesis Data Stream Listener is the entry point into the AWS stack, initially I have configure this service with a very simple and basic operationality with a single shard. 1 shard will empower my entry listener point to process up to 1K records per second and read equialy a max of 2MB/sec and write 1MB/sec. If you on your escenario need to pilot a pipeline with greater than these features please increase the number of shards or read more about this [here](https://docs.aws.amazon.com/streams/latest/dev/key-concepts.html).
+
+
 
 
