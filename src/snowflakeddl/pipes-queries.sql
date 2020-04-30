@@ -3,7 +3,7 @@
 
 CREATE OR REPLACE PIPE "DB"."SCHEMA"."PIPENAME" auto_ingest=true  AS
   COPY INTO "DB"."SCHEMA"."KINESIS_SENSORS_MICROBATCH"
-      FROM @PERSONALAWS/kinesiscsv/
+      FROM @STAGINGAWS/kinesiscsv/
       FILE_FORMAT = (FORMAT_NAME = 'CSV');
       
       
