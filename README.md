@@ -56,6 +56,9 @@ Which give us the sample data input in this format: `{"sensorId": 6,"currentTemp
 
 5. Snowflake staging landing zone : The pipeline will end up having an automare feed process to populate two tables into the snowflake staging zone `KINESIS_SENSORS_STREAMING` and `KINESIS_SENSORS_MICROBATCH`, the scripts for these tables are available [here](https://github.com/AndresUrregoAngel/aws-sonwflake-streaming-batch-integration/blob/master/src/snowflakeddl/createtables.sql). Once the pipeline will be executed the data will flow all the architecture long until end up landing in each of these tables.
 
+    * Please to validate results execute the query [here](https://github.com/AndresUrregoAngel/aws-sonwflake-streaming-batch-integration/blob/master/src/snowflakeddl/pipes-queries.sql)
+    ![results](https://github.com/AndresUrregoAngel/cloud/blob/master/architectures/resultset-snow.png)
+
 
 
 
